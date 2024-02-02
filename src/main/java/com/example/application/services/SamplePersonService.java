@@ -21,6 +21,10 @@ public class SamplePersonService {
         return repository.findById(id);
     }
 
+    public SamplePerson save(SamplePerson entity) {
+        return repository.save(entity);
+    }
+
     public SamplePerson update(SamplePerson entity) {
         return repository.save(entity);
     }
