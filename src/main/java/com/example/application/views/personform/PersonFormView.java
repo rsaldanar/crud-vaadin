@@ -12,8 +12,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -28,6 +26,14 @@ import org.springframework.data.domain.PageRequest;
 @Route(value = "person-form", layout = MainLayout.class)
 @Uses(Icon.class)
 public class PersonFormView extends Composite<VerticalLayout> {
+
+    // Creamos el layout principal de la vista
+    VerticalLayout layoutColumn2 = new VerticalLayout();
+    H3 h3 = new H3("Información Personal");
+    // Creamos un layout para los campos del formulario
+    FormLayout formLayout2Col = new FormLayout();
+    // Creamos un layout para los botones de guardar y cancelar
+    HorizontalLayout layoutRow = new HorizontalLayout();
 
     // Aqui definimos las constantes que usaremos en el formulario
     private static final String BUTTON_SAVE_TEXT = "Save";
@@ -49,6 +55,8 @@ public class PersonFormView extends Composite<VerticalLayout> {
     public PersonFormView(@Autowired SamplePersonService samplePersonService) {
         this.samplePersonService = samplePersonService;
         initializeView();
+        //<theme-editor-local-classname>
+        addClassName("person-form-view-vertical-layout-1");
     }
 
     /**
@@ -57,33 +65,36 @@ public class PersonFormView extends Composite<VerticalLayout> {
      * y configuramos el grid con los datos de la base de datos.
      */
     private void initializeView() {
-        // Creamos el layout principal de la vista
-        VerticalLayout layoutColumn2 = new VerticalLayout();
-        H3 h3 = new H3("Información Personal");
-        // Creamos un layout para los campos del formulario
-        FormLayout formLayout2Col = new FormLayout();
-        // Creamos un layout para los botones de guardar y cancelar
-        HorizontalLayout layoutRow = new HorizontalLayout();
 
         // Configuramos los componentes
         configureComponents();
 
+        setGridSampleData();
+
+        // Configuramos los listeners de los botones
+        setButtonClickListeners();
+    }
+
+    private void configureComponents() {
         // Configuramos los estilos y tamaños de los componentes
         getContent().setWidth("100%");
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
         layoutColumn2.setHeight("min-content");
+
         h3.setWidth("100%");
+
         formLayout2Col.setWidth("100%");
+
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
+        // Configuramos los botones
         buttonSave.setWidth("min-content");
         buttonSave.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonCancel.setWidth("min-content");
-        basicGrid.setWidth("100%");
-        basicGrid.getStyle().set("flex-grow", "0");
-        setGridSampleData();
+
+        getBasicGrid();
 
         // Agregamos los componentes al layout principal
         getContent().add(layoutColumn2);
@@ -94,13 +105,25 @@ public class PersonFormView extends Composite<VerticalLayout> {
         layoutRow.add(buttonSave, buttonCancel);
         // Agregamos el grid al layout principal
         getContent().add(basicGrid);
-
-        // Configuramos los listeners de los botones
-        setButtonClickListeners();
     }
 
-    private void configureComponents() {
-        // Configurar cualquier configuración adicional aquí
+    public Grid getBasicGrid() {
+        // Configuramos el grid
+        basicGrid.setWidth("100%");
+        basicGrid.getStyle().set("flex-grow", "0");
+//        basicGrid.setColumns("id", "firstName", "lastName", "age", "version");
+//        basicGrid.getColumnByKey("id").setVisible(false);
+//        basicGrid.getColumnByKey("version").setVisible(false);
+//        basicGrid.getColumnByKey("firstName").setHeader(LineAwesomeIcon.USER.create());
+
+        // Configuramos el grid para que al seleccionar un registro se llene el formulario
+        basicGrid.asSingleSelect().addValueChangeListener(event -> {
+            if (event.getValue() != null) {
+                fillFormWithData(event.getValue());
+                nameTextField.focus();
+            }
+        });
+        return basicGrid;
     }
 
     /**
@@ -124,11 +147,6 @@ public class PersonFormView extends Composite<VerticalLayout> {
             }
         });
 
-        basicGrid.asSingleSelect().addValueChangeListener(event -> {
-            if (event.getValue() != null) {
-                fillFormWithData(event.getValue());
-            }
-        });
     }
 
     /**
