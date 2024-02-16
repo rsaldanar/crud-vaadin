@@ -45,4 +45,7 @@ public class SamplePersonService {
         return (int) repository.count();
     }
 
+//    public List<? extends SamplePerson> findAll() {
+//        return repository.findAll();
+//    }
 }

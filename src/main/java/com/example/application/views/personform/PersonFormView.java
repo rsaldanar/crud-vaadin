@@ -12,6 +12,8 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -65,7 +67,6 @@ public class PersonFormView extends Composite<VerticalLayout> {
      * y configuramos el grid con los datos de la base de datos.
      */
     private void initializeView() {
-
         // Configuramos los componentes
         configureComponents();
 
@@ -113,7 +114,7 @@ public class PersonFormView extends Composite<VerticalLayout> {
         basicGrid.getStyle().set("flex-grow", "0");
 //        basicGrid.setColumns("id", "firstName", "lastName", "age", "version");
 //        basicGrid.getColumnByKey("id").setVisible(false);
-//        basicGrid.getColumnByKey("version").setVisible(false);
+////        basicGrid.getColumnByKey("version").setVisible(false);
 //        basicGrid.getColumnByKey("firstName").setHeader(LineAwesomeIcon.USER.create());
 
         // Configuramos el grid para que al seleccionar un registro se llene el formulario
